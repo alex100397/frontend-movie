@@ -1,0 +1,154 @@
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════════════════════════════
+   DESIGN TOKENS — Stitch MCP "Cinematic Immersive" Design System
+   ═══════════════════════════════════════════════════════════════════ */
+
+@theme {
+  --color-primary: #ffb4aa;
+  --color-on-primary: #690003;
+  --color-primary-container: #e50914;
+  --color-on-primary-container: #fff7f6;
+
+  --color-secondary: #c3c6d2;
+  --color-on-secondary: #2c303a;
+  --color-secondary-container: #434751;
+
+  --color-tertiary: #c1c6d6;
+  --color-tertiary-container: #6c7280;
+
+  --color-error: #ffb4ab;
+  --color-error-container: #93000a;
+
+  --color-background: #111317;
+  --color-on-background: #e2e2e8;
+  --color-surface: #111317;
+  --color-surface-dim: #111317;
+  --color-surface-bright: #37393e;
+  --color-surface-lowest: #0c0e12;
+  --color-surface-low: #1a1c20;
+  --color-surface-mid: #1e2024;
+  --color-surface-high: #282a2e;
+  --color-surface-highest: #333539;
+  --color-on-surface: #e2e2e8;
+  --color-on-surface-variant: #e9bcb6;
+  --color-surface-variant: #333539;
+
+  --color-outline: #af8782;
+  --color-outline-variant: #5e3f3b;
+
+  --color-cinema-red: #e50914;
+  --color-cinema-red-hover: #ff1a26;
+  --color-cinema-glow: oklch(0.55 0.25 25 / 0.4);
+  --color-glass-border: oklch(1 0 0 / 0.1);
+  --color-glass-bg: oklch(0.2 0.01 260 / 0.6);
+  --color-success: #81c784;
+  --color-info: #90caf9;
+
+  --font-headline: "Montserrat", sans-serif;
+  --font-body: "Inter", sans-serif;
+
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+
+  --shadow-glass: 0 8px 30px oklch(0 0 0 / 0.4);
+  --shadow-glow: 0 0 40px oklch(0.55 0.25 25 / 0.4);
+
+  --animate-shimmer: shimmer 1.5s ease-in-out infinite;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    font-family: var(--font-body);
+    color: var(--color-on-surface);
+    background-color: var(--color-background);
+  }
+  ::selection {
+    background: oklch(0.55 0.25 25 / 0.3);
+    color: #fff;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-cinema-red);
+    outline-offset: 2px;
+  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--color-surface-lowest); }
+  ::-webkit-scrollbar-thumb { background: var(--color-surface-highest); border-radius: 9999px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-outline); }
+}
+
+@layer components {
+  .glass {
+    background: var(--color-glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--color-glass-border);
+  }
+  .glass-light {
+    background: oklch(1 0 0 / 0.05);
+    backdrop-filter: blur(12px);
+    border: 1px solid oklch(1 0 0 / 0.08);
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full
+           bg-cinema-red px-6 py-3 text-sm font-semibold text-white
+           transition-all duration-200 cursor-pointer
+           hover:bg-cinema-red-hover hover:shadow-glow
+           active:scale-95 disabled:opacity-50 disabled:pointer-events-none;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full
+           px-6 py-3 text-sm font-semibold text-on-surface cursor-pointer
+           transition-all duration-200
+           active:scale-95 disabled:opacity-50 disabled:pointer-events-none;
+    background: var(--color-glass-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--color-glass-border);
+  }
+  .btn-secondary:hover { background: oklch(1 0 0 / 0.1); }
+  .input-field {
+    @apply w-full rounded-sm bg-surface-high px-4 py-3
+           text-sm text-on-surface placeholder-outline
+           border border-transparent transition-all duration-200
+           focus:border-cinema-red focus:outline-none focus:ring-1 focus:ring-cinema-red/30;
+  }
+  .input-error {
+    @apply border-error focus:border-error focus:ring-error/30;
+  }
+  .card-glass {
+    @apply rounded-lg overflow-hidden;
+    background: var(--color-glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--color-glass-border);
+  }
+  .chip {
+    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-medium text-secondary;
+    background: oklch(1 0 0 / 0.05);
+    border: 1px solid oklch(1 0 0 / 0.08);
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(135deg, #fff 0%, var(--color-primary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .scrim-bottom {
+    background: linear-gradient(180deg, transparent 0%, oklch(0.07 0.01 260 / 0.9) 100%);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
