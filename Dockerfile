@@ -4,11 +4,11 @@ FROM node:20-alpine AS builder
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json first to leverage Docker cache
-COPY package.json package-lock.json ./
+# Copy package files and lockfile
+COPY package.json pnpm-lock.yaml ./
 
-# Install dependencies (using npm ci for reliable, clean installs)
-RUN npm ci
+# Enable corepack and install dependencies
+RUN corepack enable pnpm && pnpm install --frozen-lockfile
 
 # Copy the rest of the application code
 COPY . .
@@ -18,7 +18,7 @@ ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
 
 # Build the app for production
-RUN npm run build
+RUN pnpm run build
 
 # Stage 2: Serve the application using Nginx
 FROM nginx:alpine
