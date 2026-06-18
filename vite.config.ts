@@ -6,6 +6,7 @@ import path from 'path';
 export default defineConfig({
   plugins: [
     react({
+      // @ts-ignore - The types for @vitejs/plugin-react 6.x might be slightly mismatched with babel options
       babel: {
         plugins: [['babel-plugin-react-compiler', {}]],
       },

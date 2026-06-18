@@ -1,14 +1,14 @@
 # Stage 1: Build the React Application
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 
 # Set working directory
 WORKDIR /app
 
-# Copy package files and lockfile
-COPY package.json pnpm-lock.yaml ./
+# Copy package.json
+COPY package.json ./
 
-# Enable corepack and install dependencies
-RUN corepack enable pnpm && pnpm install --frozen-lockfile
+# Install dependencies using npm
+RUN npm install
 
 # Copy the rest of the application code
 COPY . .
@@ -18,7 +18,7 @@ ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
 
 # Build the app for production
-RUN pnpm run build
+RUN npm run build
 
 # Stage 2: Serve the application using Nginx
 FROM nginx:alpine
