@@ -1,73 +1,37 @@
-# React + TypeScript + Vite
+# CineVault Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the highly performant React frontend for the CineVault application. It is built using the latest React 19 stack with the React Compiler enabled for automatic memoization and extreme performance.
 
-Currently, two official plugins are available:
+## Tech Stack
+- **Framework:** React 19 + TypeScript
+- **Bundler:** Vite 8
+- **Performance:** Babel Plugin React Compiler (No manual `useMemo` needed)
+- **State Management:** Zustand (in-memory, highly optimized)
+- **Routing:** React Router v7
+- **Styling:** TailwindCSS v4
+- **API Requests:** Axios
+- **Deployment:** Docker + Nginx
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Security & Architecture
+- **XSS Immunity:** Uses a pure HttpOnly cookie-based authentication flow. The JWT token is never exposed to JavaScript or `localStorage`.
+- **Zustand Persistence:** User state is persisted to localStorage for seamless UX upon refresh, but sensitive tokens remain entirely in the secure browser vault.
+- **Docker + Nginx:** Production builds are compiled into static assets and served by a blazing-fast Nginx container.
 
-## React Compiler
+## Setup Instructions
 
-The **React Compiler** is **enabled** on this template! It uses `babel-plugin-react-compiler` with `@vitejs/plugin-react` to automatically memoize components, eliminating the need for manual `useMemo` and `useCallback` in most cases. ESLint is also configured with `eslint-plugin-react-compiler` to enforce rules.
+### Local Development
+1. Ensure Node.js 22+ is installed.
+2. Run `npm install` (or `pnpm install`).
+3. Run `npm run dev` to start the Vite development server.
+4. The dev server proxies `/api` requests automatically to `http://localhost:5000`.
 
-## Expanding the ESLint configuration
+### Docker Production Build
+To build and run the frontend using Docker:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+```bash
+# Build the image (compiles Vite and sets up Nginx)
+docker build --build-arg VITE_API_URL=http://localhost:5000 -t movie-frontend-app .
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Run the container on port 5001
+docker run -p 5001:80 movie-frontend-app
 ```
