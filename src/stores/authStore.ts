@@ -5,7 +5,6 @@ import type { User, ApiResponse, AuthPayload } from '@/types';
 
 interface AuthState {
   user: User | null;
-  token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
@@ -19,7 +18,6 @@ export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       user: null,
-      token: null,
       isAuthenticated: false,
       isLoading: false,
       error: null,
@@ -28,7 +26,7 @@ export const useAuthStore = create<AuthState>()(
         set({ isLoading: true, error: null });
         try {
           const { data } = await api.post<ApiResponse<AuthPayload>>('/auth/login', { email, password });
-          set({ user: data.data.user, token: data.data.token, isAuthenticated: true, isLoading: false });
+          set({ user: data.data.user, isAuthenticated: true, isLoading: false });
           return { success: true };
         } catch (err: any) {
           const message = err.response?.data?.message || 'Login failed';
@@ -41,7 +39,7 @@ export const useAuthStore = create<AuthState>()(
         set({ isLoading: true, error: null });
         try {
           const { data } = await api.post<ApiResponse<AuthPayload>>('/auth/signup', { name, email, password });
-          set({ user: data.data.user, token: data.data.token, isAuthenticated: true, isLoading: false });
+          set({ user: data.data.user, isAuthenticated: true, isLoading: false });
           return { success: true };
         } catch (err: any) {
           const message = err.response?.data?.message || 'Signup failed';
@@ -52,7 +50,7 @@ export const useAuthStore = create<AuthState>()(
 
       logout: async () => {
         try { await api.post('/auth/logout'); } catch { /* silent */ }
-        set({ user: null, token: null, isAuthenticated: false, error: null });
+        set({ user: null, isAuthenticated: false, error: null });
       },
 
       clearError: () => set({ error: null }),
@@ -61,7 +59,6 @@ export const useAuthStore = create<AuthState>()(
       name: 'cinevault-auth',
       partialize: (state) => ({
         user: state.user,
-        token: state.token,
         isAuthenticated: state.isAuthenticated,
       }),
     },

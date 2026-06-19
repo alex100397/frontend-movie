@@ -11,13 +11,9 @@ const api = axios.create({
   timeout: 15_000,
 });
 
-api.interceptors.request.use((config) => {
-  const token = useAuthStore.getState().token;
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+// Request interceptor not needed anymore for auth because 
+// the browser automatically attaches the HttpOnly 'jwt' cookie
+// thanks to withCredentials: true.
 
 api.interceptors.response.use(
   (res) => res,
